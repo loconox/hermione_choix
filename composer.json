@@ -1,0 +1,54 @@
+{
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "beta",
+    "require": {
+        "php": "^7.0.8",
+        "kriswallsmith/buzz": "^0.15.1",
+        "symfony/console": "^4.0@beta",
+        "symfony/flex": "^1.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/lts": "^4@dev",
+        "symfony/yaml": "^4.0"
+    },
+    "require-dev": {
+        "symfony/dotenv": "^4.0"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "id": "01BXP7V4K4BCNRERN9TT9ATR57",
+            "allow-contrib": false
+        }
+    }
+}
