@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Choisi</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for leg in legs %}
+            <tr>
+                <td>{{ leg.id }}</td>
+                <td><a href="{{ path('legPage', {id: leg.id}) }}" >{{ leg.name }}</a></td>
+                <td>{{ leg.choices|length }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

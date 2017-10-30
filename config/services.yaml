@@ -1,7 +1,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    app.url: "%env(APP_URL)%"
+    app.questionnaire: "%env(APP_QUESTIONNAIRE)%"
+    app.resultat: "%env(APP_RESULTAT)%"
 
 services:
     # default configuration for services in *this* file
@@ -21,4 +22,9 @@ services:
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude: '../src/{Entity,Migrations,Repository,Tests}'
+
+    app.command.generate:
+        class: App\Command\LoadCommand
+        calls:
+            - [ setLogger, [ "@logger" ]]
 

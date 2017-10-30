@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>LEG {{ leg.id }} : {{ leg.name }}</h1>
+
+    {% for priority,c in choices %}
+        <div class="choice">
+            <h2>Choix {{ priority }} : {{ c|length }}</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for choice in c %}
+                    <tr>
+                        <td>{{ choice.gabier.firstName }} {{ choice.gabier.lastName }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+{% endblock %}
