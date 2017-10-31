@@ -22,7 +22,15 @@ APP_SECRET=<une chaine très compliquée>
 
 APP_QUESTIONNAIRE=<l'id du questionnaire askabox>
 APP_RESULTAT=<id du resultat askabox>
+APP_PASSWOR=<un mot de passe pour le compte 'hermione'>
 DATABASE_URL="mysql://root@127.0.0.1:3306/hermione?charset=utf8mb4&serverVersion=5.6"
+```
+
+## Creation de la base de données
+
+```bash
+bin/console doctrine:database:create
+bin/console doctrine:schema:update --force
 ```
 
 ## Chargement des données
