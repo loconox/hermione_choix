@@ -88,5 +88,98 @@
     },
     "kriswallsmith/buzz": {
         "version": "v0.15.1"
+    },
+    "doctrine/cache": {
+        "version": "v1.7.1"
+    },
+    "doctrine/inflector": {
+        "version": "v1.2.0"
+    },
+    "doctrine/lexer": {
+        "version": "v1.0.1"
+    },
+    "doctrine/collections": {
+        "version": "v1.5.0"
+    },
+    "doctrine/annotations": {
+        "version": "v1.5.0"
+    },
+    "doctrine/common": {
+        "version": "v2.8.1"
+    },
+    "symfony/doctrine-bridge": {
+        "version": "v4.0.0-beta1"
+    },
+    "doctrine/doctrine-cache-bundle": {
+        "version": "1.3.2"
+    },
+    "jdorn/sql-formatter": {
+        "version": "v1.2.17"
+    },
+    "doctrine/dbal": {
+        "version": "v2.6.2"
+    },
+    "doctrine/doctrine-bundle": {
+        "version": "1.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.6",
+            "ref": "f29d6af1f605b9494a2c9c3a73cb1cacc6cca19b"
+        }
+    },
+    "doctrine/instantiator": {
+        "version": "1.1.0"
+    },
+    "doctrine/orm": {
+        "version": "v2.5.12"
+    },
+    "symfony/orm-pack": {
+        "version": "v1.0.3"
+    },
+    "monolog/monolog": {
+        "version": "1.23.0"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v4.0.0-beta1"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.1",
+            "ref": "94d0b0b417e988466de57cea583f83b396e44661"
+        }
+    },
+    "twig/twig": {
+        "version": "v2.4.4"
+    },
+    "symfony/twig-bridge": {
+        "version": "v4.0.0-beta1"
+    },
+    "symfony/twig-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "42324de95dde296ef158f48d6cf7fefddd18da7d"
+        }
+    },
+    "symfony/asset": {
+        "version": "v4.0.0-beta1"
+    },
+    "symfony/process": {
+        "version": "v4.0.0-beta1"
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "c72d107d077f1654428edaed69415d0228c1aefe"
+        }
     }
 }

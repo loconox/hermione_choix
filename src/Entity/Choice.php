@@ -34,7 +34,6 @@ class Choice
     /**
      * @var \App\Entity\Gabier
      * @ORM\ManyToOne(targetEntity="Gabier", inversedBy="choices", cascade={"persist", "merge"})
-     * @ORM\JoinColumn(referencedColumnName="pseudo")
      * @ORM\Id()
      */
     protected $gabier;

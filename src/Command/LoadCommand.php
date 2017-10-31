@@ -5,6 +5,7 @@
  * Date: 30/10/2017
  * Time: 10:01
  */
+
 namespace App\Command;
 
 use App\Entity\Choice;
@@ -39,8 +40,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
     protected function configure()
     {
         $this->setName('app:load')
-            ->addOption('force', 'f', InputOption::VALUE_NONE)
-        ;
+            ->addOption('force', 'f', InputOption::VALUE_NONE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -62,18 +62,24 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         $file = 'data.csv';
         $force = $force || !file_exists($file);
         if ($force) {
-            $questionnaire = $this->container->getParameter('app.questionnaire');
+            $questionnaire = $this->container->getParameter(
+                'app.questionnaire'
+            );
             $resultat = $this->container->getParameter('app.resultat');
-            $url = sprintf('http://www.askabox.fr/resultats.php?exportcsv=Export+CSV&s=%s&r=%s', $questionnaire, $resultat);
+            $url = sprintf(
+                'http://www.askabox.fr/resultats.php?exportcsv=Export+CSV&s=%s&r=%s',
+                $questionnaire,
+                $resultat
+            );
 
-            $browser  = new Browser();
+            $browser = new Browser();
             $headers = [
                 'Host' => 'www.askabox.fr',
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:56.0) Gecko/20100101 Firefox/56.0',
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             ];
             $response = $browser->get($url, $headers);
-            $csv      = $response->getContent();
+            $csv = $response->getContent();
             // Fix latin1 encoding
             $csv = iconv("ISO-8859-1", "UTF-8//TRANSLIT", $csv);
             file_put_contents($file, $csv);
@@ -166,7 +172,10 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         $em = $this->container->get('doctrine.orm.default_entity_manager');
 
         // Just keep responses
-        $lines = $this->filter($csv, '"10. Classez par ordre de préférence le(s) LEG(S) que vous souhaitez réaliser:"');
+        $lines = $this->filter(
+            $csv,
+            '"10. Classez par ordre de préférence le(s) LEG(S) que vous souhaitez réaliser:"'
+        );
 
         $temp = [];
         $legs = $em->getRepository("App:LEG")->findAll();
@@ -196,7 +205,11 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
             }
 
             foreach (explode("|", $choices) as $strChoice) {
-                preg_match("/LEG (\d+) - (.+) : priorité (\d)/", $strChoice, $matches);
+                preg_match(
+                    "/LEG (\d+) - (.+) : priorité (\d)/",
+                    $strChoice,
+                    $matches
+                );
 
                 $legId = $matches[1];
                 $legName = $matches[2];
@@ -205,7 +218,9 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
                 if (isset($legs[$legId])) {
                     $leg = $legs[$legId];
                 } else {
-                    $this->logger->warning(sprintf('New LEG found %s', $leg->getId()));
+                    $this->logger->warning(
+                        sprintf('New LEG found %s', $legId)
+                    );
                     $leg = new LEG();
                     $leg->setId($legId);
                     $leg->setName($legName);
@@ -228,6 +243,8 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         }
 
         $em->flush();
+
+        $this->fixChoiceZero();
     }
 
     private function filter($csv, $begin, $skipLines = 9)
@@ -263,5 +280,49 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    private function fixChoiceZero()
+    {
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $repo = $em->getRepository('App:Gabier');
+
+        $qb = $repo->createQueryBuilder('g');
+        $qb->join('g.choices', 'c');
+        $qb->andWhere(
+            $qb->expr()->eq('c.priority', ':priority')
+        );
+        $qb->orderBy('c.priority', 'ASC');
+        $qb->setParameter('priority', 0);
+        $gabiers = $qb->getQuery()->execute();
+
+        foreach ($gabiers as $gabier) {
+            foreach ($gabier->getChoices() as $choice) {
+                $choice->setPriority($choice->getPriority() + 1);
+            }
+        }
+        $em->flush();
+    }
+
+    protected function slugify($text)
+    {
+        $text = trim($text);
+        // this code is for BC
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+        // trim
+        $text = trim($text, '-');
+        // transliterate
+        /*if (function_exists('iconv')) {
+            $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+        }*/
+        $text = transliterator_transliterate("Latin-ASCII", $text);
+        // lowercase
+        $text = strtolower($text);
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        return $text;
     }
 }

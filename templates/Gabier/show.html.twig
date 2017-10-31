@@ -3,20 +3,19 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
+            <h3>{{ gabier.firstName }} {{ gabier.lastName }}</h3>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Nom</th>
-                    <th>Choisi</th>
+                    <th>Leg</th>
+                    <th>Priorité</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for leg in legs %}
+                {% for choice in gabier.choices %}
                     <tr>
-                        <td>LEG {{ leg.id }}</td>
-                        <td><a href="{{ path('legShowPage', {id: leg.id}) }}" >{{ leg.name }}</a></td>
-                        <td>{{ leg.choices|length }}</td>
+                        <td><a href="{{ path('legShowPage', {id: choice.leg.id}) }}">LEG {{ choice.leg.id }} {{ choice.leg.name }}</a></td>
+                        <td>{{ choice.priority }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

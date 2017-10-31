@@ -19,9 +19,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Gabier
 {
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var int
+     * @ORM\Column(type="integer")
      * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", unique=true)
      */
     protected $pseudo;
 
@@ -112,5 +119,11 @@ class Gabier
         $this->firstName = $firstName;
     }
 
-
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

@@ -1,25 +1,46 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>LEG {{ leg.id }} : {{ leg.name }}</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>LEG {{ leg.id }} : {{ leg.name }}</h3>
 
-    {% for priority,c in choices %}
-        <div class="choice">
-            <h2>Choix {{ priority }} : {{ c|length }}</h2>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Nom</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for choice in c %}
-                    <tr>
-                        <td>{{ choice.gabier.firstName }} {{ choice.gabier.lastName }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% for priority,c in choices %}
+                <div class="choice">
+                    <h4>Choix {{ priority }} : {{ c|length }}</h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Autres choix</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for choice in c %}
+                            {% set gabier = choice.gabier %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}</a>
+                                </td>
+                                <td>
+                                    <ul>
+                                        {% for otherChoice in gabier.choices %}
+                                            {% if otherChoice == choice %}
+                                                <li>{{ otherChoice.priority }} - {{ otherChoice.leg.name }}</li>
+                                            {% else %}
+                                                <li>
+                                                    <a href="{{ path('legShowPage', {id: otherChoice.leg.id}) }}">{{ otherChoice.priority }}
+                                                        - {{ otherChoice.leg.name }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}

@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LegController extends Controller
 {
     /**
-     * @Route("/leg", name="legsPage")
+     * @Route("/leg", name="legIndexPage")
      */
     public function indexAction()
     {
@@ -26,7 +26,7 @@ class LegController extends Controller
 
     /**
      * @param $id
-     * @Route("/leg/{id}", name="legPage")
+     * @Route("/leg/{id}", name="legShowPage")
      */
     public function legAction($id)
     {

@@ -5,10 +5,14 @@
     "require": {
         "php": "^7.0.8",
         "kriswallsmith/buzz": "^0.15.1",
+        "symfony/asset": "^4.0@beta",
         "symfony/console": "^4.0@beta",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.0",
         "symfony/lts": "^4@dev",
+        "symfony/monolog-bundle": "^3.1",
+        "symfony/orm-pack": "^1.0",
+        "symfony/web-server-bundle": "^4.0@beta",
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
