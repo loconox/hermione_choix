@@ -4,22 +4,43 @@
     <div class="row">
         <div class="col-md-12">
             <h3>{{ gabier.firstName }} {{ gabier.lastName }}</h3>
-            <table class="table">
+            <p>Souhaite participer à {{ gabier.nbWantedLeg }} LEG(s).</p>
+            {% set validated = 0 %}
+            {% for choice in gabier.choices if choice.validated %}
+                {% set validated = validated + 1 %}
+            {% endfor %}
+            <p>{{ validated }} LEG(s) ont été validés !</p>
+            <table class="table choices">
                 <thead>
                 <tr>
                     <th>Leg</th>
                     <th>Priorité</th>
+                    <th>Validé</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for choice in gabier.choices %}
-                    <tr>
-                        <td><a href="{{ path('legShowPage', {id: choice.leg.id}) }}">LEG {{ choice.leg.id }} {{ choice.leg.name }}</a></td>
-                        <td>{{ choice.priority }}</td>
-                    </tr>
+                    {% include 'Gabier/_choice.html.twig' %}
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.choices').on('click', '.validated-yes, .validated-no', function (e) {
+                var url = $(this).data('url');
+                var tr = $(this).parents('tr');
+
+                $.ajax({
+                    url: url,
+                }).done(function (data) {
+                    tr.replaceWith(data);
+                });
+            });
+        });
+    </script>
 {% endblock %}

@@ -40,5 +40,4 @@ class GabierController extends Controller
 
         return $this->render('Gabier/show.html.twig', ['gabier' => $gabier]);
     }
-
 }

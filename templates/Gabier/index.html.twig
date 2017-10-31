@@ -3,22 +3,24 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            <table class="table" id="gabiers-table">
+            <table class="table table-hover" id="gabiers-table">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Pseudo</th>
                     <th>Prénom</th>
                     <th>Nom</th>
+                    <th>Nombre de leg souhaité</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for gabier in gabiers %}
-                    <tr>
+                    <tr data-url="{{ path('gabierShowPage', {id: gabier.id}) }}">
                         <td>{{ gabier.id }}</td>
                         <td>{{ gabier.pseudo }}</td>
                         <td>{{ gabier.firstName }}</td>
                         <td>{{ gabier.lastName }}</td>
+                        <td>{{ gabier.nbWantedLeg }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -31,6 +33,9 @@
     <script>
         $(document).ready(function () {
             $('#gabiers-table').DataTable();
+            $('#gabiers-table > tbody > tr').on('click', function(e) {
+                window.location = $(this).data('url');
+            });
         });
     </script>
 {% endblock %}

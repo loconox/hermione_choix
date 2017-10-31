@@ -50,6 +50,12 @@ class Gabier
      */
     protected $choices;
 
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $nbWantedLeg;
+
     function __construct()
     {
         $this->choices = new ArrayCollection();
@@ -125,5 +131,21 @@ class Gabier
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNbWantedLeg()
+    {
+        return $this->nbWantedLeg;
+    }
+
+    /**
+     * @param mixed $nbWantedLeg
+     */
+    public function setNbWantedLeg($nbWantedLeg)
+    {
+        $this->nbWantedLeg = $nbWantedLeg;
     }
 }

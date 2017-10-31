@@ -39,6 +39,12 @@ class Choice
     protected $gabier;
 
     /**
+     * @var boolean
+     * @ORM\Column(type="boolean", options={"default"=false})
+     */
+    protected $validated = false;
+
+    /**
      * @return int
      */
     public function getPriority()
@@ -84,5 +90,21 @@ class Choice
     public function setGabier(Gabier $gabier)
     {
         $this->gabier = $gabier;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValidated(): bool
+    {
+        return $this->validated;
+    }
+
+    /**
+     * @param bool $validated
+     */
+    public function setValidated(bool $validated)
+    {
+        $this->validated = $validated;
     }
 }

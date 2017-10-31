@@ -50,6 +50,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         $this->clean();
         $this->parseGabiers($csv);
         $this->parseChoices($csv);
+        $this->parseNbLeg($csv);
     }
 
     /**
@@ -185,11 +186,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         }
         $legs = $temp;
 
-        $gabiers = $em->getRepository("App:Gabier")->findAll();
-        foreach ($gabiers as $gabier) {
-            $temp[$gabier->getPseudo()] = $gabier;
-        }
-        $gabiers = $temp;
+        $gabiers = $this->getAllGabiers();
 
         foreach ($lines as $line) {
             if (preg_match('/^"(.*)";"(.*)"$/', $line, $matches) <= 0) {
@@ -245,7 +242,38 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
 
         $em->flush();
 
-        $this->fixChoiceZero();
+        //$this->fixChoiceZero();
+    }
+
+    private function parseNbLeg($csv)
+    {
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $gabiers = $this->getAllGabiers();
+
+        // Just keep responses
+        $lines = $this->filter(
+            $csv,
+            '"9. COMBIEN DE LEG(S) SOUHAITEZ VOUS FAIRE ?"', 19
+        );
+
+        foreach ($lines as $line) {
+            if (preg_match('/^"(.*)";"(.*)"$/', $line, $matches) <= 0) {
+                continue;
+            }
+            $pseudo = $matches[1];
+            $nb = $matches[2];
+
+            if (isset($gabiers[$pseudo])) {
+                $gabier = $gabiers[$pseudo];
+            } else {
+                $this->logger->warning(sprintf('Gabier %s not found', $pseudo));
+                continue;
+            }
+
+            $gabier->setNbWantedLeg($nb);
+        }
+
+        $em->flush();
     }
 
     private function filter($csv, $begin, $skipLines = 9)
@@ -304,6 +332,21 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
             }
         }
         $em->flush();
+    }
+
+    /**
+     * @return Gabier[]
+     */
+    private function getAllGabiers()
+    {
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+
+        $gabiers = [];
+        foreach ($em->getRepository("App:Gabier")->findAll() as $gabier) {
+            $gabiers[$gabier->getPseudo()] = $gabier;
+        }
+
+        return $gabiers;
     }
 
     protected function slugify($text)

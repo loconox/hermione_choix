@@ -1,0 +1,17 @@
+<tr class="{% if choice.validated %}table-success{% else %}table-secondary{% endif %}">
+    <td>
+        <a href="{{ path('legShowPage', {id: choice.leg.id}) }}">LEG {{ choice.leg.id }} {{ choice.leg.name }}</a>
+    </td>
+    <td>{{ choice.priority }}</td>
+    <td>
+        <div class="btn-group">
+            <button type="button" class="btn {% if choice.validated %}btn-success{% else %}btn-danger{% endif %} dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ choice.validated ? "Oui" : "Non" }}
+            </button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item validated-yes" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, priority: choice.priority, value: 1}) }}">Oui</button>
+                <button class="dropdown-item validated-no" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, priority: choice.priority, value: 0}) }}">Non</button>
+            </div>
+        </div>
+    </td>
+</tr>
