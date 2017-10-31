@@ -16,6 +16,17 @@ class GabierController extends Controller
 {
 
     /**
+     * @Route("/gabier/", name="gabierIndexPage")
+     */
+    public function indexAction()
+    {
+        $repo = $this->getDoctrine()->getRepository('App:Gabier');
+        $gabiers = $repo->findAll();
+
+        return $this->render('Gabier/index.html.twig', ['gabiers' => $gabiers]);
+    }
+
+    /**
      * @Route("/gabier/{id}", name="gabierShowPage")
      */
     public function showAction($id)

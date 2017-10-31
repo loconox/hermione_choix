@@ -71,6 +71,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
                 $questionnaire,
                 $resultat
             );
+            $this->logger->info(sprintf("Chargement des données depuis : %s", $url));
 
             $browser = new Browser();
             $headers = [

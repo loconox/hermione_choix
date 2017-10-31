@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jumbotron">
+                <h1 class="display-3">{{ legCount }} LEG</h1>
+                <hr class="my-4">
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="{{ path('legIndexPage') }}" role="button">Voir les legs</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron">
+                <h1 class="display-3">{{ gabierCount }} gabiers inscrits</h1>
+                <p class="lead">Qui ont formulés {{ choiceCount }} choix.</p>
+                <hr class="my-4">
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="{{ path('gabierIndexPage') }}" role="button">Voir les gabiers</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
