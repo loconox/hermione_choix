@@ -45,4 +45,13 @@ class IndexController extends Controller
         ]);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/about", name="aboutPage")
+     */
+    public function aboutAction()
+    {
+        return $this->render('about.html.twig');
+    }
+
 }

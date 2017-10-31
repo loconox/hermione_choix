@@ -24,6 +24,9 @@
             <li class="nav-item{% if app.request.get('_route') == 'gabierIndexPage' %} active{% endif %}">
                 <a class="nav-link" href="{{ path('gabierIndexPage') }}">Gabiers</a>
             </li>
+            <li class="nav-item{% if app.request.get('_route') == 'aboutPage' %} active{% endif %}">
+                <a class="nav-link" href="{{ path('aboutPage') }}">À propos</a>
+            </li>
         </ul>
     </div>
 </nav>
