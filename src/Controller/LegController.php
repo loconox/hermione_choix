@@ -19,7 +19,9 @@ class LegController extends Controller
      */
     public function indexAction()
     {
-        $legs = $this->get('doctrine.orm.default_entity_manager')->getRepository('App:LEG')->findAll();
+        $legs = $this->get('doctrine.orm.default_entity_manager')
+            ->getRepository('App:LEG')
+            ->findAll();
 
         return $this->render('Leg/index.html.twig', ['legs' => $legs]);
     }
@@ -30,8 +32,9 @@ class LegController extends Controller
      */
     public function legAction($id)
     {
+        $em = $this->get('doctrine.orm.default_entity_manager');
         /** @var \App\Entity\LEG $leg */
-        $leg = $this->get('doctrine.orm.default_entity_manager')->getRepository('App:LEG')->find($id);
+        $leg = $em->getRepository('App:LEG')->find($id);
 
         if (!$leg) {
             throw $this->createNotFoundException('Leg not found');
@@ -46,7 +49,27 @@ class LegController extends Controller
             $choices[$priority][] = $choice;
         }
 
-        return $this->render("Leg/show.html.twig", ['leg' => $leg, 'choices' => $choices]);
+        $repo = $em->getRepository('App:Gabier');
+        $qb = $repo->createQueryBuilder('g');
+        $qb->join('g.choices', 'c');
+        $qb->andWhere(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.LEG', ':leg'),
+                $qb->expr()->eq('c.validated', ':validated')
+            )
+        );
+        $qb->setParameter('leg', $leg);
+        $qb->setParameter('validated', true);
+        $validated = $qb->getQuery()->execute();
+
+        return $this->render(
+            "Leg/show.html.twig",
+            [
+                'leg' => $leg,
+                'choices' => $choices,
+                'validated' => $validated,
+            ]
+        );
     }
 
 }

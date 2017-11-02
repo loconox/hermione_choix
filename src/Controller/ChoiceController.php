@@ -15,13 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ChoiceController extends Controller
 {
     /**
-     * @Route("/choice/{gabierId}/{leg}/{priority}/{value}", name="validateChoicePage", requirements={"value"="\d"})
+     * @Route("/choice/{gabierId}/{leg}/{value}", name="validateChoicePage", requirements={"value"="\d"})
      */
-    public function validateAction($gabierId, $leg, $priority, $value)
+    public function validateAction($gabierId, $leg, $value)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var \App\Entity\Choice $choice */
-        $choice = $em->getRepository('App:Choice')->find(['gabier' => $gabierId, 'LEG' => $leg, 'priority' => $priority]);
+        $choice = $em->getRepository('App:Choice')->find(['gabier' => $gabierId, 'LEG' => $leg]);
 
         if (!$choice) {
             throw $this->createNotFoundException('Choice not found');

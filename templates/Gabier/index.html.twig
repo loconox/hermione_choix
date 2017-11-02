@@ -10,6 +10,7 @@
                     <th>Pseudo</th>
                     <th>Prénom</th>
                     <th>Nom</th>
+                    <th>Nouveau</th>
                     <th>Nombre de leg souhaité</th>
                 </tr>
                 </thead>
@@ -20,6 +21,7 @@
                         <td>{{ gabier.pseudo }}</td>
                         <td>{{ gabier.firstName }}</td>
                         <td>{{ gabier.lastName }}</td>
+                        <td>{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</td>
                         <td>{{ gabier.nbWantedLeg }}</td>
                     </tr>
                 {% endfor %}

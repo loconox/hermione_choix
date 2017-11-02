@@ -9,8 +9,8 @@
                 {{ choice.validated ? "Oui" : "Non" }}
             </button>
             <div class="dropdown-menu">
-                <button class="dropdown-item validated-yes" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, priority: choice.priority, value: 1}) }}">Oui</button>
-                <button class="dropdown-item validated-no" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, priority: choice.priority, value: 0}) }}">Non</button>
+                <button class="dropdown-item validated-yes" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, value: 1}) }}">Oui</button>
+                <button class="dropdown-item validated-no" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, value: 0}) }}">Non</button>
             </div>
         </div>
     </td>

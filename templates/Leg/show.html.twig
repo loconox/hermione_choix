@@ -5,22 +5,48 @@
         <div class="col-md-12">
             <h3>LEG {{ leg.id }} : {{ leg.name }}</h3>
 
+            <p>{{ validated|length }}/54 gabier(s) dans le leg</p>
+            <table class="table leg">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for gabier in validated %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}</a></td>
+                        <td>
+                            <button type="button" class="close gabier-action" data-url="{{ path('validateChoicePage', {gabierId: gabier.id, leg: leg.id, value: 0}) }}" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
             {% for priority,c in choices %}
                 <div class="choice">
-                    <h4>Choix {{ priority }} : {{ c|length }}</h4>
+                    <h5>Choix {{ priority }} : {{ c|length }}</h5>
                     <table class="table">
                         <thead>
                         <tr>
                             <th>Nom</th>
                             <th>Autres choix</th>
+                            <th>Valider</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for choice in c %}
+                        {% for choice in c if not choice.validated %}
                             {% set gabier = choice.gabier %}
                             <tr>
                                 <td>
-                                    <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</a>
+                                    <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}{% if gabier.new %}
+                                            <span class="badge badge-success">new</span>{% endif %}</a>
                                 </td>
                                 <td>
                                     <ul>
@@ -35,6 +61,9 @@
                                         {% endfor %}
                                     </ul>
                                 </td>
+                                <td>
+                                    <button class="btn btn-success gabier-action" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, value: 1}) }}">Ajouter</button>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -43,4 +72,19 @@
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(".leg").DataTable();
+        $(document).ready(function () {
+            $('.gabier-action').on('click', function(e) {
+                $.ajax({
+                    url: $(this).data('url')
+                }).done(function() {
+                    window.location = window.location;
+                });
+            });
+        });
+    </script>
 {% endblock %}
