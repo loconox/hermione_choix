@@ -56,6 +56,12 @@ class Gabier
      */
     protected $nbWantedLeg;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", options={"default"=true})
+     */
+    protected $new = true;
+
     function __construct()
     {
         $this->choices = new ArrayCollection();
@@ -134,6 +140,14 @@ class Gabier
     }
 
     /**
+     * @param int $id
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return mixed
      */
     public function getNbWantedLeg()
@@ -147,5 +161,21 @@ class Gabier
     public function setNbWantedLeg($nbWantedLeg)
     {
         $this->nbWantedLeg = $nbWantedLeg;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNew(): bool
+    {
+        return $this->new;
+    }
+
+    /**
+     * @param bool $new
+     */
+    public function setNew(bool $new)
+    {
+        $this->new = $new;
     }
 }

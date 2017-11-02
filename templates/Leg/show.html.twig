@@ -20,7 +20,7 @@
                             {% set gabier = choice.gabier %}
                             <tr>
                                 <td>
-                                    <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}</a>
+                                    <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.firstName }} {{ gabier.lastName }}{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</a>
                                 </td>
                                 <td>
                                     <ul>

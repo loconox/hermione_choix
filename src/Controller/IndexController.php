@@ -32,11 +32,8 @@ class IndexController extends Controller
                          ->getQuery()
                          ->getSingleScalarREsult();
 
-        $choiceCount = $this->getDoctrine()->getRepository('App:Choice')
-                            ->createQueryBuilder('c')
-                            ->select('COUNT(c)')
-                            ->getQuery()
-                            ->getSingleScalarREsult();
+
+        $choiceCount = count($this->getDoctrine()->getRepository('App:Choice')->findAll());
 
         return $this->render('index.html.twig', [
             'legCount' => $legCount,

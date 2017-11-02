@@ -20,7 +20,6 @@ class Choice
     /**
      * @var int
      * @ORM\Column(type="string")
-     * @ORM\Id()
      */
     protected $priority;
 

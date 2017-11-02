@@ -47,10 +47,11 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
     {
         $force = $input->getOption('force');
         $csv = $this->getData($force);
-        $this->clean();
+        //$this->clean();
         $this->parseGabiers($csv);
         $this->parseChoices($csv);
         $this->parseNbLeg($csv);
+        $this->parseNoobs($csv);
     }
 
     /**
@@ -72,7 +73,9 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
                 $questionnaire,
                 $resultat
             );
-            $this->logger->info(sprintf("Chargement des données depuis : %s", $url));
+            $this->logger->info(
+                sprintf("Chargement des données depuis : %s", $url)
+            );
 
             $browser = new Browser();
             $headers = [
@@ -120,7 +123,8 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
     private function parseGabiers($csv)
     {
         $em = $this->container->get('doctrine.orm.default_entity_manager');
-        $gabiers = [];
+        $repo = $em->getRepository('App:Gabier');
+        $gabiers = $this->getAllGabiers();
 
         // Just keep NOM section
         $lines = $this->filter($csv, '"1. NOM"');
@@ -172,6 +176,14 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
     private function parseChoices($csv)
     {
         $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $repo = $em->getRepository('App:Choice');
+        $qb = $repo->createQueryBuilder('c');
+        $qb->andWhere(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.gabier', ':gabier'),
+                $qb->expr()->eq('c.LEG', ':leg')
+            )
+        );
 
         // Just keep responses
         $lines = $this->filter(
@@ -179,13 +191,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
             '"10. Classez par ordre de préférence le(s) LEG(S) que vous souhaitez réaliser:"'
         );
 
-        $temp = [];
-        $legs = $em->getRepository("App:LEG")->findAll();
-        foreach ($legs as $leg) {
-            $temp[$leg->getId()] = $leg;
-        }
-        $legs = $temp;
-
+        $legs = $this->getAllLegs();
         $gabiers = $this->getAllGabiers();
 
         foreach ($lines as $line) {
@@ -211,7 +217,7 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
 
                 $legId = $matches[1];
                 $legName = $matches[2];
-                $priority = $matches[3];
+                $priority = intval($matches[3]);
 
                 if (isset($legs[$legId])) {
                     $leg = $legs[$legId];
@@ -226,23 +232,28 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
                     $em->persist($leg);
                 }
 
-                $choice = new Choice();
-                $choice->setLEG($leg);
-                $choice->setPriority($priority);
-                $choice->setGabier($gabier);
-                $leg->addChoice($choice);
+                $qb->setParameter('gabier', $gabier);
+                $qb->setParameter('leg', $leg);
 
-                $gabier->addChoice($choice);
+                $choice = $qb->getQuery()->getOneOrNullResult();
+
+                if (!$choice) {
+                    $choice = new Choice();
+                    $choice->setLEG($leg);
+                    $choice->setPriority($priority);
+                    $choice->setGabier($gabier);
+
+                    $em->persist($choice);
+                } else {
+                    $choice->setPriority($priority);
+                }
+
             }
-        }
-
-        foreach ($gabiers as $gabier) {
-            $em->merge($gabier);
         }
 
         $em->flush();
 
-        //$this->fixChoiceZero();
+        $this->fixChoiceZero();
     }
 
     private function parseNbLeg($csv)
@@ -253,7 +264,8 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         // Just keep responses
         $lines = $this->filter(
             $csv,
-            '"9. COMBIEN DE LEG(S) SOUHAITEZ VOUS FAIRE ?"', 19
+            '"9. COMBIEN DE LEG(S) SOUHAITEZ VOUS FAIRE ?"',
+            19
         );
 
         foreach ($lines as $line) {
@@ -271,6 +283,38 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
             }
 
             $gabier->setNbWantedLeg($nb);
+        }
+
+        $em->flush();
+    }
+
+    private function parseNoobs($csv)
+    {
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $gabiers = $this->getAllGabiers();
+
+        // Just keep responses
+        $lines = $this->filter(
+            $csv,
+            '"8. ÊTES VOUS GABIER FORMÉ EN 2017 ?"',
+            14
+        );
+
+        foreach ($lines as $line) {
+            if (preg_match('/^"(.*)";"(.*)"$/', $line, $matches) <= 0) {
+                continue;
+            }
+            $pseudo = $matches[1];
+            $noob = $matches[2] == "OUI" ? true : false;
+
+            if (isset($gabiers[$pseudo])) {
+                $gabier = $gabiers[$pseudo];
+            } else {
+                $this->logger->warning(sprintf('Gabier %s not found', $pseudo));
+                continue;
+            }
+
+            $gabier->setNew($noob);
         }
 
         $em->flush();
@@ -328,7 +372,9 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
 
         foreach ($gabiers as $gabier) {
             foreach ($gabier->getChoices() as $choice) {
-                $choice->setPriority($choice->getPriority() + 1);
+                if ($choice->getPriority() < 7) {
+                    $choice->setPriority($choice->getPriority() + 1);
+                }
             }
         }
         $em->flush();
@@ -347,6 +393,21 @@ class LoadCommand extends Command implements ContainerAwareInterface, LoggerAwar
         }
 
         return $gabiers;
+    }
+
+    /**
+     * @return LEG[]
+     */
+    private function getAllLegs()
+    {
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+
+        $legs = [];
+        foreach ($em->getRepository("App:LEG")->findAll() as $leg) {
+            $legs[$leg->getId()] = $leg;
+        }
+
+        return $legs;
     }
 
     protected function slugify($text)

@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            <h3>{{ gabier.firstName }} {{ gabier.lastName }}</h3>
+            <h3>{{ gabier.firstName }} {{ gabier.lastName }}{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</h3>
             <p>Souhaite participer à {{ gabier.nbWantedLeg }} LEG(s).</p>
             {% set validated = 0 %}
             {% for choice in gabier.choices if choice.validated %}
