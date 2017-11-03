@@ -48,6 +48,7 @@ class LegController extends Controller
             }
             $choices[$priority][] = $choice;
         }
+        ksort($choices);
 
         $repo = $em->getRepository('App:Gabier');
         $qb = $repo->createQueryBuilder('g');
