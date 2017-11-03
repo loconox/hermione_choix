@@ -24,7 +24,9 @@
                             <a href="{{ path('gabierShowPage', {id: gabier.id}) }}">{{ gabier.lastName }}</a>
                         </td>
                         <td>
-                            <button type="button" class="close gabier-action" data-url="{{ path('validateChoicePage', {gabierId: gabier.id, leg: leg.id, value: 0}) }}" aria-label="Close">
+                            <button type="button" class="close gabier-action"
+                                    data-url="{{ path('validateChoicePage', {gabierId: gabier.id, leg: leg.id, value: 0}) }}"
+                                    aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </td>
@@ -32,7 +34,17 @@
                 {% endfor %}
                 </tbody>
             </table>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% set filename = "leg-"~leg.id~"-"~leg.name|slugify %}
+            <a class="btn btn-primary"
+               href="{{ path('exportLegPage', {'id': leg.id, 'filename': filename, 'format': 'csv'}) }}">Export CSV</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
             {% for priority,c in choices %}
                 <div class="choice">
@@ -67,7 +79,10 @@
                                     </ul>
                                 </td>
                                 <td>
-                                    <button class="btn btn-success gabier-action" data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, value: 1}) }}">Ajouter</button>
+                                    <button class="btn btn-success gabier-action"
+                                            data-url="{{ path('validateChoicePage', {gabierId: choice.gabier.id, leg: choice.leg.id, value: 1}) }}">
+                                        Ajouter
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -83,10 +98,10 @@
     <script>
         $(".leg").DataTable();
         $(document).ready(function () {
-            $('.gabier-action').on('click', function(e) {
+            $('.gabier-action').on('click', function (e) {
                 $.ajax({
                     url: $(this).data('url')
-                }).done(function() {
+                }).done(function () {
                     window.location = window.location;
                 });
             });
