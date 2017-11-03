@@ -9,14 +9,20 @@
                     <th>Id</th>
                     <th>Nom</th>
                     <th>Choisi</th>
+                    <th>Composé</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for leg in legs %}
                     <tr>
                         <td>LEG {{ leg.id }}</td>
-                        <td><a href="{{ path('legShowPage', {id: leg.id}) }}" >{{ leg.name }}</a></td>
+                        <td><a href="{{ path('legShowPage', {id: leg.id}) }}">{{ leg.name }}</a></td>
                         <td>{{ leg.choices|length }}</td>
+                        {% set validated = 0 %}
+                        {% for choice in leg.choices if choice.validated %}
+                            {% set validated = validated + 1 %}
+                        {% endfor %}
+                        <td>{{ validated }}/54</td>
                     </tr>
                 {% endfor %}
                 </tbody>
