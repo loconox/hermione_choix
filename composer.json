@@ -13,6 +13,7 @@
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "^1.0",
         "symfony/security-bundle": "^4.0@beta",
+        "symfony/validator": "^4.0@beta",
         "symfony/web-server-bundle": "^4.0@beta",
         "symfony/yaml": "^4.0"
     },

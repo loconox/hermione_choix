@@ -1,32 +1,50 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <style>
+        #action {
+            padding: 20px 0 20px 0;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-hover" id="gabiers-table">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Pseudo</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Nouveau</th>
-                    <th>Nombre de leg souhaité</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for gabier in gabiers %}
-                    <tr data-url="{{ path('gabierShowPage', {id: gabier.id}) }}">
-                        <td>{{ gabier.id }}</td>
-                        <td>{{ gabier.pseudo }}</td>
-                        <td>{{ gabier.firstName }}</td>
-                        <td>{{ gabier.lastName }}</td>
-                        <td>{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</td>
-                        <td>{{ gabier.nbWantedLeg }}</td>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="action">
+                <a class="btn btn-primary" href="{{ path('gabierNewPage') }}">Nouveau gabier</a>
+            </div>
+            <div id="table">
+                <table class="table table-hover" id="gabiers-table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Pseudo</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Nouveau</th>
+                        <th>Nombre de leg souhaité</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for gabier in gabiers %}
+                        <tr data-url="{{ path('gabierShowPage', {id: gabier.id}) }}">
+                            <td>{{ gabier.id }}</td>
+                            <td>{{ gabier.pseudo }}</td>
+                            <td>{{ gabier.firstName }}</td>
+                            <td>{{ gabier.lastName }}</td>
+                            <td>{% if gabier.new %} <span class="badge badge-success">new</span>{% endif %}</td>
+                            <td>{{ gabier.nbWantedLeg }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -35,7 +53,7 @@
     <script>
         $(document).ready(function () {
             $('#gabiers-table').DataTable();
-            $('#gabiers-table > tbody > tr').on('click', function(e) {
+            $('#gabiers-table > tbody > tr').on('click', function (e) {
                 window.location = $(this).data('url');
             });
         });

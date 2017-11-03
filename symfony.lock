@@ -199,5 +199,29 @@
             "version": "3.3",
             "ref": "85834af1496735f28d831489d12ab1921a875e0d"
         }
+    },
+    "symfony/options-resolver": {
+        "version": "v4.0.0-beta2"
+    },
+    "symfony/intl": {
+        "version": "v4.0.0-beta2"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.6.0"
+    },
+    "symfony/form": {
+        "version": "v4.0.0-beta2"
+    },
+    "symfony/translation": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "58f37511a2ceec2761716413ce679cbe118e37c3"
+        }
+    },
+    "symfony/validator": {
+        "version": "v4.0.0-beta2"
     }
 }
